@@ -6,12 +6,41 @@ from flask_cors import CORS
 import os
 app = Flask(__name__)
 CORS(app)
-# 
-# scms_db = ecom.Database(secret="DatabaseSCMSSecret419E44BA-1RUpdMlySpJV")
 
-css_db = ecom.Database(secret="DatabaseCSSSecretD03DE3E4-Sk9q5RHn6DI9")
-ecommerce_db = ecom.Database(secret="DatabaseEcomSecret50B0C388-opRRg2o7aaTF")
-scms_db = ecom.Database(secret="DatabaseSCMSSecret419E44BA-1RUpdMlySpJV")
+# Check if environment variables are set
+css_secret = os.environ.get('DB_CSS_SECRET')
+ecom_secret = os.environ.get('DB_ECOM_SECRET')
+scms_secret = os.environ.get('DB_SCMS_SECRET')
+
+# Initialize database objects based on whether secrets are set
+start_app=False
+if css_secret:
+    css_db = ecom.Database(secret=css_secret)
+    print("CSS database initialized.")
+    start_app=True
+else:
+    css_db = None
+    print("CSS secret not found. CSS database not initialized.")
+
+if ecom_secret:
+    ecommerce_db = ecom.Database(secret=ecom_secret)
+    print("Ecommerce database initialized.")
+    start_app=True
+else:
+    ecommerce_db = None
+    print("Ecommerce secret not found. Ecommerce database not initialized.")
+
+if scms_secret:
+    scms_db = ecom.Database(secret=scms_secret)
+    print("SCMS database initialized.")
+    start_app=True
+else:
+    scms_db = None
+    print("SCMS secret not found. SCMS database not initialized.")
+
+if not start_app:
+    print("No database secrets found. Exiting.")
+    exit(1)
 
 @app.route('/')
 def home():
