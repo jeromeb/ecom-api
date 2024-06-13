@@ -1,0 +1,6 @@
+mysql-connector-python
+datetime
+boto3
+futures
+flask
+flask-cors
